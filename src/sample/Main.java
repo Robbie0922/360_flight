@@ -23,12 +23,12 @@ public class Main {
 
         }
 
-
         Passenger ps = new Passenger(fname, fclass);
         double cost = ps.Cost(fclass);
+        int seat = ps.Seat(fclass);
 
-        Flight flight_310 = new Flight(5, 310, "8:00 AM", "9:30 AM", "Newark", "Greesnboro", fname, fclass, cost);
-        Flight flight_320 = new Flight(5, 320, "1:59 PM", "3:29 PM", "Greensboro", "Newark", fname, fclass, cost);
+        Flight flight_310 = new Flight(seat, 310, "8:00 AM", "9:30 AM", "Newark", "Greesnboro", fname, fclass, cost);
+        Flight flight_320 = new Flight(seat, 320, "1:59 PM", "3:29 PM", "Greensboro", "Newark", fname, fclass, cost);
         String i = "1";
         System.out.println("Thank you for choosing United Airlines!\n\nWe currently have 1 flight to Greensboro from Newark (Flight 310)" +
                 "\n\nWe currently have 1 flight from Newark to Greensboro (Flight 320)");
@@ -51,11 +51,28 @@ public class Main {
             if(time == 310){
                 System.out.println("Select a seat: \n");
                 int ticket = keyboard.nextInt();
+                if(seat == 5){
+                    while(ticket < 0 || ticket > flight_310.getSeats()-1) {
+                        System.out.println("Please enter a seat number between 0 and "+ (flight_310.getSeats()-1)+" \n");
+                        ticket = keyboard.nextInt();
+                    }
 
-                while(ticket < 0 || ticket > flight_310.getSeats()-1) {
-                    System.out.println("Please enter a seat number between 0 and "+ (flight_310.getSeats()-1)+" \n");
-                    ticket = keyboard.nextInt();
                 }
+                if(seat == 10){
+                    while(ticket < 4 || ticket > 14) {
+                        System.out.println("Please enter a seat number between 5 and "+ (seat - 1) +" \n");
+                        ticket = keyboard.nextInt();
+                    }
+
+                }
+                if(seat == 15){
+                    while(ticket < 14 || ticket > flight_310.getSeats()-1) {
+                        System.out.println("Please enter a seat number between 5 and "+ (flight_310.getSeats()-1)+" \n");
+                        ticket = keyboard.nextInt();
+                    }
+
+                }
+
 
                 try{
                     flight_310.reserveUnitedTicket(ticket);
@@ -67,9 +84,25 @@ public class Main {
                 System.out.println("Select a seat: \n");
                 int ticket = keyboard.nextInt();
 
-                while(ticket < 0 || ticket > flight_320.getSeats()-1) {
-                    System.out.println("Please enter a seat number between 0 and "+ (flight_320.getSeats()-1)+"\n");
-                    ticket = keyboard.nextInt();
+                if(seat == 5){
+                    while(ticket < 0 || ticket > flight_310.getSeats()-1) {
+                        System.out.println("Please enter a seat number between 0 and "+ (flight_310.getSeats()-1)+" \n");
+                        ticket = keyboard.nextInt();
+                    }
+
+                }
+                if(seat == 10){
+                    while(ticket < 4 || ticket > 14) {
+                        System.out.println("Please enter a seat number between 5 and "+ (seat - 1) +" \n");
+                        ticket = keyboard.nextInt();
+                    }
+
+                }
+                if(seat == 15) {
+                    while (ticket < 14 || ticket > flight_310.getSeats() - 1) {
+                        System.out.println("Please enter a seat number between 5 and " + (flight_310.getSeats() - 1) + " \n");
+                        ticket = keyboard.nextInt();
+                    }
                 }
 
                 try{
