@@ -9,15 +9,33 @@ public class Main {
 
         //  Create movie objects
         Scanner keyboard = new Scanner(System.in);
-        Flight flight_310 = new Flight(5, 310, "8:00 AM", "9:30 AM", "Newark", "Greesnboro");
-        Flight flight_320 = new Flight(5, 320, "1:59 PM", "3:29 PM", "Greensboro", "Newark");
+
+
+        System.out.println("Enter your name how it is displayed on your Driver's License");
+        String fname = keyboard.nextLine();
+        System.out.println("Enter the class you desire. Type 'E' for caoch. 'B' for busines and 'F' for first class.");
+        char fclass = keyboard.next().charAt(0);
+
+        while(fclass != 'E' && fclass != 'B' && fclass != 'F'){  // keeps prompting if it is not 310 or 320
+
+            System.out.println("Please enter either 'E', 'B' or 'F'");
+            fclass = keyboard.next().charAt(0);
+
+        }
+
+
+        Passenger ps = new Passenger(fname, fclass);
+        double cost = ps.Cost(fclass);
+
+        Flight flight_310 = new Flight(5, 310, "8:00 AM", "9:30 AM", "Newark", "Greesnboro", fname, fclass, cost);
+        Flight flight_320 = new Flight(5, 320, "1:59 PM", "3:29 PM", "Greensboro", "Newark", fname, fclass, cost);
         String i = "1";
-        System.out.println("Thank you for choosing United Airlines!\n\nWe currently have 1 flight to Greensboro from Newark" +
-                "\n\nWe currently have 1 flight from Newark to Greensboro");
+        System.out.println("Thank you for choosing United Airlines!\n\nWe currently have 1 flight to Greensboro from Newark (Flight 310)" +
+                "\n\nWe currently have 1 flight from Newark to Greensboro (Flight 320)");
         while(i.equalsIgnoreCase("1")){
             // prompt user to select movie time
 
-            System.out.println("\nIf you would like the 310 flight, enter '310'.\nIf you would like the 320 flight, enter '320'.\n\n");
+            System.out.println("\nIf you would like the 310 flight, enter '310'.\nIf you would like the 320 flight, enter '320'.\n");
 
             int time = keyboard.nextInt();
 

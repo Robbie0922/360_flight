@@ -3,7 +3,7 @@ package sample;
 import java.util.*;
 import java.text.*;
 
-public class Flight {
+public class Flight extends Passenger {
 
     private int seats;
     private int[] flight;
@@ -11,10 +11,12 @@ public class Flight {
     private String depart, arrive;
     private String locTo, locFrom;
     private int tickets;
+    private double fcost;
 
 
 
-    public Flight(int seats, int num, String depart, String arrive, String locTo, String locFrom) {
+    public Flight(int seats, int num, String depart, String arrive, String locTo, String locFrom, String name, char fclass, double fcost) {
+        super(name, fclass);
 
         this.seats = seats;
         this.num = num;
@@ -23,12 +25,14 @@ public class Flight {
         this.locTo = locTo;
         this.locFrom = locFrom;
         this.tickets = seats;
+        this.fcost = fcost;
         flight = new int[seats];
         for (int i = 1; i < seats; i++) {
             flight[i] = 0;
         }
 
     }
+
 
     public boolean planeFull() {
 
@@ -47,9 +51,9 @@ public class Flight {
 
         if (!planeFull()) { //this is the condition for if their ticket is available
             if (getSeat(seat) == 0) {
-                System.out.println("\nYou have booked Seat #" + seat + " for flight " + this.getNum() +
-                        " Leaving at " + this.getDepart() + " from " + this.getFrom() +
-                        "\nArriving at " + this.getArrive() + " to " + this.getTo() + "\n");
+                System.out.println("\nConfirmation for: " + getName() + " \nFor flight " + this.getNum() +
+                        "\nLeaving at " + this.getDepart() + " from " + this.getFrom() +
+                        "\nArriving at " + this.getArrive() + " to " + this.getTo() + "\nTicket price is " + this.getCost());
                 this.bookSeat(seat);
             } else {
                 throw new TicketsSoldOutError("\nSeat # " + seat + " for flight " + this.getNum() +
@@ -100,8 +104,13 @@ public class Flight {
             return this.seats;
         }
 
+        public double getCost () {
+        return this.fcost;
+    }
+
         public int getSeat ( int seat){
             return flight[seat];
         }
+
 
     }
