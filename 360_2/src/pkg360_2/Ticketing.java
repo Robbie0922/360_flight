@@ -5,34 +5,33 @@
  */
 package pkg360_2;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Abdul
  */
 public class Ticketing {
-
-//    String Name;
-//    String type;
-//    int cost = 300;
-//    int seatNumber;
-//    boolean windowSeat;
-//    String flightName;
-//    private String depart, arrive;           // departure and arrival times
-//    private String locTo, locFrom;          // number of remaining seats
-    
     Plane r;
     Passenger p;
-    
-    public Ticketing(Plane plane, Passenger p){
-       this.r = plane;
-       this.p = p;
-} 
-    
-    public void printName(){
-    System.out.println("namename");
-    System.out.println("namename");
-    System.out.println("namename");
+
+    public Ticketing(Plane plane, Passenger p) {
+        this.r = plane;
+        this.p = p;
     }
-    
+
+    public String printTicket() {
+        String x = System.lineSeparator();
+        String ticket = "Flight Ticket" + x;
+
+        ticket += "name: " + p.getName() + x;
+        ticket += "Flyer Type: " + p.getFlyerType() + x;
+        ticket += "Flight: " + r.getFlightName() + x;
+        ticket += "Depart from: " + r.getLocFrom() + " at " + r.getDepart() + x;
+        ticket += "Arrive to: " + r.getLocTo() + " at " + r.getArrive() + x;
+        ticket += "Cost of ticket: " + p.getCost() + x;
+        ticket += "Seat number: " + p.getSeat() + x;
+        return ticket;
+    }
 
 }

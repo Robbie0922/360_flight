@@ -29,7 +29,7 @@ public class Gui extends Application implements EventHandler {
 
     private ArrayList<Plane> list = new ArrayList<>();
     private String flight, flights = "Current flights: ";
-    private Passenger jack;
+    private Passenger newFlyer;
     private String n, f;
     private Button exit;
     private Button viewAll;
@@ -98,7 +98,7 @@ public class Gui extends Application implements EventHandler {
             }
             n = JOptionPane.showInputDialog(null, "What type of seating do you want to fly? Economy, Business, or First Class");
             while (checkChar(n.charAt(0)) == false) {
-                 JOptionPane.showMessageDialog(null, "unavailable input", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "unavailable input", "Error", JOptionPane.ERROR_MESSAGE);
                 n = JOptionPane.showInputDialog(null, "Error: choose Economy, Business, or First Class");
             }
             addNewPassenger();
@@ -110,6 +110,8 @@ public class Gui extends Application implements EventHandler {
             stage1.setTitle("American Airlines");
         } else if (b.getText().equals("choose seat")) {
             ChooseSeat();
+            stage1.setScene(scene);
+            stage1.setTitle("American Airlines");
         }
 
     }
@@ -237,33 +239,42 @@ public class Gui extends Application implements EventHandler {
     }
 
     public void ChooseSeat() {
-         Plane r = null;
+        Plane currenPlane = null;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getFlightName().equalsIgnoreCase(flight)) {
-                r = list.get(i);
+                currenPlane = list.get(i);
             }
         }
 //      create passenger object
-        jack = new Passenger(Tname.getText(), n.charAt(0), TWindow.getText().charAt(0));
+        newFlyer = new Passenger(Tname.getText(), n.charAt(0), TWindow.getText().charAt(0));
         String p = "E";
         if (n.charAt(0) == 'f' || n.charAt(0) == 'F') {
-            jack.setSnack(TSnacks.getText().charAt(0));
-            jack.setTaxi(TTaxi.getText().charAt(0));
+            newFlyer.setSnack(TSnacks.getText().charAt(0));
+            newFlyer.setTaxi(TTaxi.getText().charAt(0));
             p = "F";
         } else if (n.charAt(0) == 'b' || n.charAt(0) == 'B') {
-            jack.setSnack(TSnacks.getText().charAt(0));
+            newFlyer.setSnack(TSnacks.getText().charAt(0));
             p = "B";
         }
-         
-        f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + r.getOpenSeats(jack.getWindow(), jack.getType()));
-        while (!r.getOpenSeats(jack.getWindow(), jack.getType()).contains(f)) {
-             JOptionPane.showMessageDialog(null, "Seat is unavailable", "Error", JOptionPane.ERROR_MESSAGE);
-            f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + r.getOpenSeats(jack.getWindow(), jack.getType()));
+
+        f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + currenPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()));
+        while (!currenPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()).contains(f)) {
+            JOptionPane.showMessageDialog(null, "Seat is unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+            f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + currenPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()));
         }
-        r.setseat(Integer.parseInt(f), jack);
-        jack.setFlight(flight);
+        newFlyer.setSeat(Integer.parseInt(f));
+        currenPlane.setseat(Integer.parseInt(f), newFlyer);
+        newFlyer.setFlight(flight);
 
 //        print ticket
+        if (newFlyer.getFlyerType().equalsIgnoreCase("economy")) {
+            EconomyTicket ticket = new EconomyTicket(currenPlane, newFlyer);
+        } else if (newFlyer.getFlyerType().equalsIgnoreCase("Business")) {
+            BusinessTicket ticket = new BusinessTicket(currenPlane, newFlyer);
+        } else if (newFlyer.getFlyerType().equalsIgnoreCase("First Class")) {
+            FirstClassTicket ticket = new FirstClassTicket(currenPlane, newFlyer);
+        }
+
     }
 
     public void preSet() {

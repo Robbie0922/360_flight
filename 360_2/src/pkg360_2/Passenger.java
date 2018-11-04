@@ -23,8 +23,36 @@ public class Passenger {
     public Passenger(String name, char type, char w) {
         this.name = name;
         this.type = type;
-        if(w=='n') window = 0;
+        if (w == 'n'||w=='N') {
+            window = 1;
+        }
         Cost(type);
+    }
+
+    public String getFlyerType() {
+        String flyerType = "";
+
+        switch (type) {
+            case 'E':
+                flyerType = "economy";
+                break;
+            case 'B':
+                flyerType = "Business";
+                break;
+            case 'F':
+                flyerType = "First Class";
+                break;
+            case 'e':
+                flyerType = "economy";
+                break;
+            case 'b':
+                flyerType = "Business";
+                break;
+            case 'f':
+                flyerType = "First Class";
+                break;
+        }
+        return flyerType;
     }
 
     // Get cost of tickets based on class chosen
@@ -138,12 +166,12 @@ public class Passenger {
      * @param snack the snack to set
      */
     public void setSnack(char s) {
-        if(s == 'p'){
-        this.snack = "peanuts";
-        }else{
-        this.snack = "cookies";
+        if (s == 'p') {
+            this.snack = "peanuts";
+        } else {
+            this.snack = "cookies";
         }
-            
+
     }
 
     /**
@@ -173,7 +201,5 @@ public class Passenger {
     public void setFlight(String flight) {
         this.flight = flight;
     }
-    
-    
 
 }

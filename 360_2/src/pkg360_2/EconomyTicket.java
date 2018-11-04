@@ -5,6 +5,8 @@
  */
 package pkg360_2;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Abdul
@@ -13,12 +15,8 @@ public class EconomyTicket extends Ticketing {
     
     public EconomyTicket(Plane plane, Passenger p) {
         super(plane, p);
-        super.printName();
-    }
-
-    @Override
-    public void printName() {
-        super.printName(); //To change body of generated methods, choose Tools | Templates.
+        String ticket= super.printTicket();
+        JOptionPane.showMessageDialog(null, ticket);
     }
     
 

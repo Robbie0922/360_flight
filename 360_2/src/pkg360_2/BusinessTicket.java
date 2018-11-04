@@ -5,10 +5,20 @@
  */
 package pkg360_2;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Abdul
  */
-public class BusinessTicket {
-    
+public class BusinessTicket extends Ticketing {
+
+    public BusinessTicket(Plane plane, Passenger p) {
+        super(plane, p);
+        String x = System.lineSeparator();
+        String ticket = super.printTicket();
+        ticket+="Snack Choice: "+p.getSnack()+x;
+        JOptionPane.showMessageDialog(null, ticket);
+    }
+
 }
