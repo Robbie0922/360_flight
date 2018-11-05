@@ -22,7 +22,7 @@ public class Ticketing {
 
     public String printTicket() {
         String x = System.lineSeparator();
-        String ticket = "Flight Ticket" + x;
+        String ticket = "Flight Ticket" + x + "------------------------------------------------------------"+x;
 
         ticket += "name: " + p.getName() + x;
         ticket += "Flyer Type: " + p.getFlyerType() + x;

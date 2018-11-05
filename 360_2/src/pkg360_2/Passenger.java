@@ -147,7 +147,7 @@ public class Passenger {
      * @param taxi the taxi to set
      */
     public void setTaxi(char t) {
-        if (t == 'y') {
+        if (t == 'y'|| t=='Y') {
             this.taxi = true;
         } else {
             this.taxi = false;

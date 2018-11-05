@@ -66,6 +66,10 @@ public class Plane {
                 r += i + ", ";
             }
         }
+        
+        if(r.equals("Choose open seat: ")){
+        return "no seat available";
+        }
 
         return r;
     }

@@ -188,14 +188,14 @@ public class Gui extends Application implements EventHandler {
     }
 
     public void setFlightData() {
-        Plane g = new Plane(Tnumber.getText(), TSTime.getText(), TLTime.getText(), TSLoc.getText(), TELoc.getText());
+        Plane g = new Plane(Tnumber.getText(), TSTime.getText(), TLTime.getText(), TELoc.getText(), TSLoc.getText());
         list.add(g);
-        flights += Tnumber.getText() + "; ";
+        flights += Tnumber.getText() + ", ";
     }
 
     public void addNewPassenger() {
 
-        Label name = new Label("Name");
+        Label name = new Label("Full Name");
         Label Snacks = new Label("Snack choice");
         Label Taxi = new Label("Taxi");
         Label Window = new Label("Window Seat");
@@ -239,10 +239,10 @@ public class Gui extends Application implements EventHandler {
     }
 
     public void ChooseSeat() {
-        Plane currenPlane = null;
+        Plane currentPlane = null;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getFlightName().equalsIgnoreCase(flight)) {
-                currenPlane = list.get(i);
+                currentPlane = list.get(i);
             }
         }
 //      create passenger object
@@ -256,23 +256,27 @@ public class Gui extends Application implements EventHandler {
             newFlyer.setSnack(TSnacks.getText().charAt(0));
             p = "B";
         }
-
-        f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + currenPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()));
-        while (!currenPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()).contains(f)) {
-            JOptionPane.showMessageDialog(null, "Seat is unavailable", "Error", JOptionPane.ERROR_MESSAGE);
-            f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + currenPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()));
-        }
-        newFlyer.setSeat(Integer.parseInt(f));
-        currenPlane.setseat(Integer.parseInt(f), newFlyer);
-        newFlyer.setFlight(flight);
+        if (currentPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()).equals("no seat available")) {
+            JOptionPane.showMessageDialog(null, "no seat is available, please change your parameters", "Error", JOptionPane.ERROR_MESSAGE);
+            addNewPassenger();
+        } else {
+            f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + currentPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()));
+            while (!currentPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()).contains(f)) {
+                JOptionPane.showMessageDialog(null, "Seat is unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+                f = JOptionPane.showInputDialog(null, "Choose your seat from the following List: " + currentPlane.getOpenSeats(newFlyer.getWindow(), newFlyer.getType()));
+            }
+            newFlyer.setSeat(Integer.parseInt(f));
+            currentPlane.setseat(Integer.parseInt(f), newFlyer);
+            newFlyer.setFlight(flight);
 
 //        print ticket
-        if (newFlyer.getFlyerType().equalsIgnoreCase("economy")) {
-            EconomyTicket ticket = new EconomyTicket(currenPlane, newFlyer);
-        } else if (newFlyer.getFlyerType().equalsIgnoreCase("Business")) {
-            BusinessTicket ticket = new BusinessTicket(currenPlane, newFlyer);
-        } else if (newFlyer.getFlyerType().equalsIgnoreCase("First Class")) {
-            FirstClassTicket ticket = new FirstClassTicket(currenPlane, newFlyer);
+            if (newFlyer.getFlyerType().equalsIgnoreCase("economy")) {
+                EconomyTicket ticket = new EconomyTicket(currentPlane, newFlyer);
+            } else if (newFlyer.getFlyerType().equalsIgnoreCase("Business")) {
+                BusinessTicket ticket = new BusinessTicket(currentPlane, newFlyer);
+            } else if (newFlyer.getFlyerType().equalsIgnoreCase("First Class")) {
+                FirstClassTicket ticket = new FirstClassTicket(currentPlane, newFlyer);
+            }
         }
 
     }
