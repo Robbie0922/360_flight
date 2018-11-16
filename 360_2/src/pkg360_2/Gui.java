@@ -5,7 +5,7 @@
  */
 package pkg360_2;
 
-import java.util.ArrayList;
+import java.util.*;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -27,7 +27,8 @@ import javax.swing.JOptionPane;
  */
 public class Gui extends Application implements EventHandler {
 
-    private ArrayList<Plane> list = new ArrayList<>();
+    private HashMap<String, Plane> list = new HashMap();
+    private ArrayList<String> flightList = new ArrayList();
     private String flight, flights = "Current flights: ";
     private Passenger newFlyer;
     private String n, f;
@@ -35,8 +36,9 @@ public class Gui extends Application implements EventHandler {
     private Button viewAll;
     private Button addFlight;
     private Button addPassenger;
-    private Button viewFlight;
+    private Button returnTicket;
     private TextField Tname;
+    private TextField Tdate;
     private TextField TSnacks;
     private TextField TTaxi;
     private TextField TWindow;
@@ -58,8 +60,9 @@ public class Gui extends Application implements EventHandler {
         addFlight = new Button("Add Flight");
         addPassenger = new Button("Add Passenger");
         viewAll = new Button("View");
+        returnTicket = new Button("Return Ticket");
 
-        HBox HBox = new HBox(viewAll, addFlight, addPassenger, exit);
+        HBox HBox = new HBox(viewAll, addFlight, addPassenger, returnTicket, exit);
         HBox.setAlignment(Pos.CENTER);
 
         pane.setCenter(HBox);
@@ -68,6 +71,7 @@ public class Gui extends Application implements EventHandler {
         exit.setOnAction(this);
         addFlight.setOnAction(this);
         addPassenger.setOnAction(this);
+        returnTicket.setOnAction(this);
 
         scene = new Scene(pane);
         stage1.setScene(scene);
@@ -81,22 +85,42 @@ public class Gui extends Application implements EventHandler {
         launch();
     }
 
+    public String selectFlight() {
+        flight = JOptionPane.showInputDialog(null, flights);
+        while (!flightList.contains(flight)) {
+            JOptionPane.showMessageDialog(null, "invalid input", "Error", JOptionPane.ERROR_MESSAGE);
+            flight = JOptionPane.showInputDialog(null, "choose from the list of " + flights);
+        }
+        return flight;
+    }
+
     @Override
     public void handle(Event e) {
         Button b = (Button) e.getSource();
         if (b.getText().equals("Exit")) {
             System.exit(-1);
+        } else if (b.getText().equals("Return Ticket")) {
+            Plane f = list.get(selectFlight());
+            if(f.getTickets()>=20){
+            JOptionPane.showMessageDialog(null, "This flight has no taken seats", "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+            String s = JOptionPane.showInputDialog(null, "Select passenger to remove " + f.getTakenSeats());
+            f.returnTicket(Integer.parseInt(s));
+            JOptionPane.showMessageDialog(null, "Ticket has been Removed");
+            }
+            
         } else if (b.getText().equals("View")) {
             veiwAll();
         } else if (b.getText().equals("Add Flight")) {
             addNewFlight();
         } else if (b.getText().equals("Add Passenger")) {
-            flight = JOptionPane.showInputDialog(null, flights);
-            while (!flights.contains(flight)) {
-                JOptionPane.showMessageDialog(null, "invalid input", "Error", JOptionPane.ERROR_MESSAGE);
-                flight = JOptionPane.showInputDialog(null, "choose from the list of " + flights);
+            selectFlight();
+            while(!list.get(flight).airplaneFull()){
+            JOptionPane.showMessageDialog(null, "This Flight is full", "Error", JOptionPane.ERROR_MESSAGE);
+            selectFlight();
             }
-            n = JOptionPane.showInputDialog(null, "What type of seating do you want to fly? Economy, Business, or First Class");
+            n = "E";
+            //n = JOptionPane.showInputDialog(null, "What type of seating do you want to fly? Economy, Business, or First Class");
             while (checkChar(n.charAt(0)) == false) {
                 JOptionPane.showMessageDialog(null, "unavailable input", "Error", JOptionPane.ERROR_MESSAGE);
                 n = JOptionPane.showInputDialog(null, "Error: choose Economy, Business, or First Class");
@@ -142,12 +166,14 @@ public class Gui extends Application implements EventHandler {
 
     public void addNewFlight() {
         //seats, number, flight time, to, from 
+        Label date = new Label("Date");
         Label number = new Label("Flight Number");
         Label STime = new Label("Take-off Time");
         Label LTime = new Label("Landing Time");
         Label SLoc = new Label("Starting Location");
         Label ELoc = new Label("Ending Location");
 
+        Tdate = new TextField();
         Tnumber = new TextField();
         TSTime = new TextField();
         TLTime = new TextField();
@@ -163,14 +189,16 @@ public class Gui extends Application implements EventHandler {
 
         gridPane.add(number, 0, 2);
         gridPane.add(Tnumber, 1, 2);
-        gridPane.add(STime, 0, 3);
-        gridPane.add(TSTime, 1, 3);
-        gridPane.add(LTime, 0, 4);
-        gridPane.add(TLTime, 1, 4);
-        gridPane.add(SLoc, 0, 5);
-        gridPane.add(TSLoc, 1, 5);
-        gridPane.add(ELoc, 0, 6);
-        gridPane.add(TELoc, 1, 6);
+        gridPane.add(date, 0, 3);
+        gridPane.add(Tdate, 1, 3);
+        gridPane.add(STime, 0, 4);
+        gridPane.add(TSTime, 1, 4);
+        gridPane.add(LTime, 0, 5);
+        gridPane.add(TLTime, 1, 5);
+        gridPane.add(SLoc, 0, 6);
+        gridPane.add(TSLoc, 1, 6);
+        gridPane.add(ELoc, 0, 7);
+        gridPane.add(TELoc, 1, 7);
 
         HBox hBox = new HBox(btn, btn2);
         hBox.setSpacing(15);
@@ -188,9 +216,10 @@ public class Gui extends Application implements EventHandler {
     }
 
     public void setFlightData() {
-        Plane g = new Plane(Tnumber.getText(), TSTime.getText(), TLTime.getText(), TELoc.getText(), TSLoc.getText());
-        list.add(g);
+        Plane g = new Plane(Tdate.getText(), Tnumber.getText(), TSTime.getText(), TLTime.getText(), TELoc.getText(), TSLoc.getText());
+        list.put(Tnumber.getText(), g);
         flights += Tnumber.getText() + ", ";
+        flightList.add(Tnumber.getText());
     }
 
     public void addNewPassenger() {
@@ -239,12 +268,7 @@ public class Gui extends Application implements EventHandler {
     }
 
     public void ChooseSeat() {
-        Plane currentPlane = null;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getFlightName().equalsIgnoreCase(flight)) {
-                currentPlane = list.get(i);
-            }
-        }
+        Plane currentPlane = list.get(flight);
 //      create passenger object
         newFlyer = new Passenger(Tname.getText(), n.charAt(0), TWindow.getText().charAt(0));
         String p = "E";
@@ -270,23 +294,19 @@ public class Gui extends Application implements EventHandler {
             newFlyer.setFlight(flight);
 
 //        print ticket
-            if (newFlyer.getFlyerType().equalsIgnoreCase("economy")) {
-                EconomyTicket ticket = new EconomyTicket(currentPlane, newFlyer);
-            } else if (newFlyer.getFlyerType().equalsIgnoreCase("Business")) {
-                BusinessTicket ticket = new BusinessTicket(currentPlane, newFlyer);
-            } else if (newFlyer.getFlyerType().equalsIgnoreCase("First Class")) {
-                FirstClassTicket ticket = new FirstClassTicket(currentPlane, newFlyer);
-            }
+            currentPlane.printTicket(newFlyer);
         }
 
     }
 
     public void preSet() {
-        Plane k = new Plane("310", "8:00 AM", "9:30 AM", "GreensBoro", "Newark");
-        Plane g = new Plane("320", "1:59 PM", "3:29 PM", "Newark", "GreensBoro");
-        list.add(g);
-        list.add(k);
+        Plane k = new Plane("Dec. 6", "310", "7:00 AM", "9:30 AM", "GreensBoro", "Newark");
+        Plane g = new Plane("Dec. 6", "320", "2:00 PM", "3:29 PM", "Newark", "GreensBoro");
+        list.put(g.getFlightName(), g);
+        list.put(k.getFlightName(), k);
         flights += "310, 320, ";
+        flightList.add("310");
+        flightList.add("320");
     }
 
     public boolean checkChar(char x) {

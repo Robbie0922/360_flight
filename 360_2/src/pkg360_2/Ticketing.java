@@ -25,6 +25,7 @@ public class Ticketing {
         String ticket = "Flight Ticket" + x + "------------------------------------------------------------"+x;
 
         ticket += "name: " + p.getName() + x;
+        ticket += "Date: " + r.getDate() + x;
         ticket += "Flyer Type: " + p.getFlyerType() + x;
         ticket += "Flight: " + r.getFlightName() + x;
         ticket += "Depart from: " + r.getLocFrom() + " at " + r.getDepart() + x;

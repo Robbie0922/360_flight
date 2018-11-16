@@ -22,8 +22,8 @@ public class Passenger {
 
     public Passenger(String name, char type, char w) {
         this.name = name;
-        this.type = type;
-        if (w == 'n'||w=='N') {
+        setType(type);
+        if (w == 'n' || w == 'N') {
             window = 1;
         }
         Cost(type);
@@ -42,21 +42,14 @@ public class Passenger {
             case 'F':
                 flyerType = "First Class";
                 break;
-            case 'e':
-                flyerType = "economy";
-                break;
-            case 'b':
-                flyerType = "Business";
-                break;
-            case 'f':
-                flyerType = "First Class";
-                break;
         }
         return flyerType;
     }
 
     // Get cost of tickets based on class chosen
     public void Cost(char type) {
+        setType(type);
+        type = getType();
         switch (type) {
             case 'E':
                 setCost(300);
@@ -67,15 +60,7 @@ public class Passenger {
             case 'F':
                 setCost((300 + (300 * .50)) * 2);
                 break;
-            case 'e':
-                setCost(300);
-                break;
-            case 'b':
-                setCost(300 + (300 * .50));
-                break;
-            case 'f':
-                setCost((300 + (300 * .50)) * 2);
-                break;
+
         }
 
     }
@@ -105,7 +90,22 @@ public class Passenger {
      * @param type the type to set
      */
     public void setType(char type) {
-        this.type = type;
+        char t = type;
+        switch (type) {
+            case 'e':
+                t = 'E';
+                break;
+            case 'b':
+                t = 'B';
+                break;
+            case 'f':
+                t = 'F';
+                break;
+            default:
+                t = t;
+                break;
+        }
+        this.type = t;
     }
 
     /**
@@ -147,7 +147,7 @@ public class Passenger {
      * @param taxi the taxi to set
      */
     public void setTaxi(char t) {
-        if (t == 'y'|| t=='Y') {
+        if (t == 'y' || t == 'Y') {
             this.taxi = true;
         } else {
             this.taxi = false;

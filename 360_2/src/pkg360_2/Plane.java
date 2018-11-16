@@ -6,6 +6,7 @@
 package pkg360_2;
 
 import javax.swing.JOptionPane;
+import java.util.*;
 
 /**
  *
@@ -13,31 +14,39 @@ import javax.swing.JOptionPane;
  */
 public class Plane {
 
+    private String date;
     private int seats;      // number of seats
     private Passenger[] list;   // array to keep check of how many seats are booked
     private String flightName;        // flight number
     private String depart, arrive; // departure and arrival times
     private String locTo, locFrom;  // locations to and from
-    private int tickets;           // number of remaining seats
+    private int[] tickets = {4, 10, 20}; // number of remaining seats
+    private HashMap<Integer, Passenger> ticketList;  //map containing all tickets
     private double fcost;       // flight cost
 
-    public Plane(String fname, String depart, String arrive, String locTo, String locFrom) {
-        this.seats = 30;
+    public Plane(String date, String fname, String depart, String arrive, String locTo, String locFrom) {
+        this.date = date;
+        this.seats = 34;
         this.flightName = fname;
         this.depart = depart;
         this.arrive = arrive;
         this.locTo = locTo;
         this.locFrom = locFrom;
-        this.tickets = seats;
         list = new Passenger[seats];
+        ticketList = new HashMap();
+    }
+
+    public boolean airplaneFull() {
+        //if there are more than 0 seats return true
+        return (tickets[2] > 0);
     }
 
     public String getOpenSeats(int window, char type) {
-        int max = 1, min= 0;
+        int max = 1, min = 0;
         String r = "Choose open seat: ";
         switch (type) {
             case 'E':
-                max = 30;
+                max = list.length;
                 min = 14;
                 break;
             case 'B':
@@ -48,35 +57,74 @@ public class Plane {
                 max = 4;
                 min = 0;
                 break;
-            case 'e':
-                max = 30;
-                min = 14;
-                break;
-            case 'b':
-                max = 14;
-                min = 4;
-                break;
-            case 'f':
-                max = 4;
-                min = 0;
-                break;
         }
         for (int i = min; i < max; i++) {
             if (list[i] == null && i % 2 == window) {
                 r += i + ", ";
             }
         }
-        
-        if(r.equals("Choose open seat: ")){
-        return "no seat available";
+
+        if (r.equals("Choose open seat: ")) {
+            return "no seat available";
         }
 
         return r;
     }
 
-    public void setseat(int num, Passenger p) {
-        list[num] = p;
-        tickets--;
+    public String getTakenSeats() {
+        String total = "";
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null) {
+                total += list[i].getSeat() + ", ";
+            }
+        }
+        return total;
+    }
+
+    public void setseat(int seatNum, Passenger p) {
+        ticketList.put(seatNum, p);
+        list[seatNum] = p;
+        switch (p.getType()) {
+            case 'E':
+                tickets[2]--;
+                break;
+            case 'B':
+                tickets[1]--;
+                break;
+            case 'F':
+                tickets[0]--;
+                break;
+        }
+    }
+
+    public void returnTicket(int seat) {
+        if (ticketList.containsKey(seat)) {
+            Passenger p = ticketList.remove(seat);
+            list[seat] = null;
+            switch (p.getType()) {
+                case 'E':
+                    tickets[2]++;
+                    break;
+                case 'B':
+                    tickets[1]++;
+                    break;
+                case 'F':
+                    tickets[0]++;
+                    break;
+            }
+           printTicket(p);
+        }
+
+    }
+
+    public void printTicket(Passenger newFlyer) {
+        if (newFlyer.getFlyerType().equalsIgnoreCase("economy")) {
+            EconomyTicket ticket = new EconomyTicket(this, newFlyer);
+        } else if (newFlyer.getFlyerType().equalsIgnoreCase("Business")) {
+            BusinessTicket ticket = new BusinessTicket(this, newFlyer);
+        } else if (newFlyer.getFlyerType().equalsIgnoreCase("First Class")) {
+            FirstClassTicket ticket = new FirstClassTicket(this, newFlyer);
+        }
     }
 
     /**
@@ -178,20 +226,6 @@ public class Plane {
     }
 
     /**
-     * @return the tickets
-     */
-    public int getTickets() {
-        return tickets;
-    }
-
-    /**
-     * @param tickets the tickets to set
-     */
-    public void setTickets(int tickets) {
-        this.tickets = tickets;
-    }
-
-    /**
      * @return the fcost
      */
     public double getFcost() {
@@ -203,6 +237,24 @@ public class Plane {
      */
     public void setFcost(double fcost) {
         this.fcost = fcost;
+    }
+
+    /**
+     * @return the date
+     */
+    public String getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getTickets() {
+        return tickets[2];
     }
 
 }
