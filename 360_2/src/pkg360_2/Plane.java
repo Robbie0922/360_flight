@@ -20,7 +20,7 @@ public class Plane {
     private String flightName;        // flight number
     private String depart, arrive; // departure and arrival times
     private String locTo, locFrom;  // locations to and from
-    private int[] tickets = {4, 10, 20}; // number of remaining seats
+    private int[] tickets = {4, 10,0}; // number of remaining seats
     private HashMap<Integer, Passenger> ticketList;  //map containing all tickets
     private double fcost;       // flight cost
 
@@ -36,9 +36,14 @@ public class Plane {
         ticketList = new HashMap();
     }
 
-    public boolean airplaneFull() {
+    public boolean airplaneFull() throws AllTicketSoldException{
         //if there are more than 0 seats return true
+        if(tickets[2] <= 0){
+        throw new AllTicketSoldException(tickets[2]); 
+        }else{
         return (tickets[2] > 0);
+        }
+        
     }
 
     public String getOpenSeats(int window, char type) {
@@ -127,6 +132,15 @@ public class Plane {
         }
     }
 
+    @Override
+    public String toString(){
+    String x = System.lineSeparator();
+        String ticket = "Flight: " + this.getFlightName() + x + "------------------------------------------------------------"+x;
+        ticket += "Date: " + this.getDate() + x;
+        ticket += "Departing from: " + this.getLocFrom() + " at " + this.getDepart() + x;
+        ticket += "Traveling to: " + this.getLocTo() + " at " + this.getArrive() + x;
+        return ticket;
+    }
     /**
      * @return the seats
      */

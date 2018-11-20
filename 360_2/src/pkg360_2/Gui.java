@@ -6,6 +6,8 @@
 package pkg360_2;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -86,11 +88,13 @@ public class Gui extends Application implements EventHandler {
     }
 
     public String selectFlight() {
+
         flight = JOptionPane.showInputDialog(null, flights);
         while (!flightList.contains(flight)) {
             JOptionPane.showMessageDialog(null, "invalid input", "Error", JOptionPane.ERROR_MESSAGE);
             flight = JOptionPane.showInputDialog(null, "choose from the list of " + flights);
         }
+
         return flight;
     }
 
@@ -101,24 +105,27 @@ public class Gui extends Application implements EventHandler {
             System.exit(-1);
         } else if (b.getText().equals("Return Ticket")) {
             Plane f = list.get(selectFlight());
-            if(f.getTickets()>=20){
-            JOptionPane.showMessageDialog(null, "This flight has no taken seats", "Error", JOptionPane.ERROR_MESSAGE);
-            }else{
-            String s = JOptionPane.showInputDialog(null, "Select passenger to remove " + f.getTakenSeats());
-            f.returnTicket(Integer.parseInt(s));
-            JOptionPane.showMessageDialog(null, "Ticket has been Removed");
+            if (f.getTickets() >= 20) {
+                JOptionPane.showMessageDialog(null, "This flight has no taken seats", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                String s = JOptionPane.showInputDialog(null, "Select passenger to remove " + f.getTakenSeats());
+                f.returnTicket(Integer.parseInt(s));
+                JOptionPane.showMessageDialog(null, "Ticket has been Removed");
             }
-            
+
         } else if (b.getText().equals("View")) {
             veiwAll();
         } else if (b.getText().equals("Add Flight")) {
             addNewFlight();
         } else if (b.getText().equals("Add Passenger")) {
-            selectFlight();
-            while(!list.get(flight).airplaneFull()){
-            JOptionPane.showMessageDialog(null, "This Flight is full", "Error", JOptionPane.ERROR_MESSAGE);
-            selectFlight();
-            }
+            try {
+                selectFlight();
+                list.get(flight).airplaneFull();
+//                while (!list.get(flight).airplaneFull()) { 
+//                    selectFlight();
+//                }
+             
+
             n = "E";
             //n = JOptionPane.showInputDialog(null, "What type of seating do you want to fly? Economy, Business, or First Class");
             while (checkChar(n.charAt(0)) == false) {
@@ -126,6 +133,12 @@ public class Gui extends Application implements EventHandler {
                 n = JOptionPane.showInputDialog(null, "Error: choose Economy, Business, or First Class");
             }
             addNewPassenger();
+        }catch (AllTicketSoldException ex) {
+                JOptionPane.showMessageDialog(null, ex.close(list.get(flight)), "AllTicketSoldException", JOptionPane.ERROR_MESSAGE);
+               
+                //ex.printStackTrace();
+            }
+
         } else if (b.getText().equals("Done")) {
             setFlightData();
             stage1.setScene(scene);
@@ -143,15 +156,15 @@ public class Gui extends Application implements EventHandler {
     public void veiwAll() {
 
         Label all = new Label(flights);
-        TextField t = new TextField();
-        Button btn = new Button("more Info");
+        //TextField t = new TextField();
+        //Button btn = new Button("more Info");
         Button btn2 = new Button("Go Back");
 
         BorderPane p = new BorderPane();
-        HBox hBox = new HBox(t, btn, btn2);
+        HBox hBox = new HBox(btn2);
         hBox.setSpacing(15);
 
-        btn.setOnAction(this);
+        // btn.setOnAction(this);
         btn2.setOnAction(this);
         p.setMinSize(230, 200);
         p.setBottom(hBox);
