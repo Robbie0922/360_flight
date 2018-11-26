@@ -20,7 +20,7 @@ public class Plane {
     private String flightName;        // flight number
     private String depart, arrive; // departure and arrival times
     private String locTo, locFrom;  // locations to and from
-    private int[] tickets = {4, 10,0}; // number of remaining seats
+    private int[] tickets = {4, 10,20}; // number of remaining seats
     private HashMap<Integer, Passenger> ticketList;  //map containing all tickets
     private double fcost;       // flight cost
 

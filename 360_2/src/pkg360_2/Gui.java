@@ -118,13 +118,15 @@ public class Gui extends Application implements EventHandler {
         } else if (b.getText().equals("Add Flight")) {
             addNewFlight();
         } else if (b.getText().equals("Add Passenger")) {
+            
+            //try catch  AllTicketSoldException
             try {
                 selectFlight();
                 list.get(flight).airplaneFull();
 //                while (!list.get(flight).airplaneFull()) { 
 //                    selectFlight();
 //                }
-             
+            
 
             n = "E";
             //n = JOptionPane.showInputDialog(null, "What type of seating do you want to fly? Economy, Business, or First Class");
